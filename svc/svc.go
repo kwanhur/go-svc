@@ -1,8 +1,8 @@
 package svc
 
 import (
-	"os/signal"
 	"os"
+	"os/signal"
 )
 
 // Create variable signal.Notify function so we can mock it in tests

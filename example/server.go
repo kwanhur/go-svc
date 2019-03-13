@@ -2,9 +2,9 @@ package main
 
 import (
 	"log"
+	"os"
 	"sync"
 	"time"
-	"os"
 )
 
 type server struct {
