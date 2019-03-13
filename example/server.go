@@ -4,6 +4,7 @@ import (
 	"log"
 	"sync"
 	"time"
+	"os"
 )
 
 type server struct {
@@ -25,6 +26,11 @@ func (s *server) start() {
 func (s *server) stop() error {
 	close(s.exit)
 	s.wg.Wait()
+	return nil
+}
+
+func (s *server) notify(sig os.Signal) error {
+	log.Printf("got signal:%v", sig.String())
 	return nil
 }
 

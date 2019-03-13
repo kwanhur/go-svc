@@ -74,6 +74,15 @@ func (p *program) Stop() error {
 	log.Println("Stopped.")
 	return nil
 }
+
+func (p *program) Notify(sig os.Signal) error {
+	log.Println("Notifying....")
+	if err := p.svr.notify(sig); err != nil {
+		return err
+	}
+	log.Println("Notified.")
+	return nil
+}
 ```
 
 ## More Examples
