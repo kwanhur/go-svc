@@ -5,7 +5,6 @@ package svc
 import (
 	"os"
 	"syscall"
-	"errors"
 )
 
 type otherService struct {
