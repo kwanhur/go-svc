@@ -31,8 +31,10 @@ func Run(service Service, sig ...os.Signal) error {
 		sig = []os.Signal{syscall.SIGINT, syscall.SIGTERM}
 	}
 
-	svr := &otherService{}
-	svr.signals = sig
+	svr := &otherService{
+		signals:   sig,
+		signalMap: make(map[os.Signal]struct{}),
+	}
 
 	return svr.run()
 }

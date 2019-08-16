@@ -55,6 +55,7 @@ func Run(service Service, sig ...os.Signal) error {
 		i:             service,
 		isInteractive: interactive,
 		signals:       sig,
+		signalMap:     make(map[os.Signal]struct{}),
 	}
 
 	if ws.IsWindowsService() {
