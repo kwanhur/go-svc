@@ -8,8 +8,8 @@ import (
 )
 
 type otherService struct {
-	service Service
-	signals []os.Signal
+	i         Service
+	signals   []os.Signal
 	signalMap map[os.Signal]struct{}
 }
 
@@ -32,6 +32,7 @@ func Run(service Service, sig ...os.Signal) error {
 	}
 
 	svr := &otherService{
+		i:         service,
 		signals:   sig,
 		signalMap: make(map[os.Signal]struct{}),
 	}
@@ -39,7 +40,7 @@ func Run(service Service, sig ...os.Signal) error {
 	return svr.run()
 }
 
-func (svr *otherService) run()error  {
+func (svr *otherService) run() error  {
 	for sig := range signalNotifier {
 		svr.signals = append(svr.signals, sig)
 	}
@@ -55,7 +56,7 @@ func (svr *otherService) run()error  {
 		if notify, ok := signalNotifier[sig]; ok {
 			notify(sig)
 		}else if _, ok := svr.signalMap[sig]; ok {
-			return svr.service.Stop()
+			return svr.i.Stop()
 		}
 	}
 }
