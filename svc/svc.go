@@ -40,10 +40,13 @@ type Environment interface {
 	IsWindowsService() bool
 }
 
-
+// SignalReceive signal information to process
+// implement case by case
 type SignalReceive func(signal os.Signal)
 
-func Notify(sig os.Signal, processor SignalReceive)error  {
+// Notify register signal to receive
+// specify receive func implement by yourself
+func Notify(sig os.Signal, receive SignalReceive)error  {
 	switch sig {
 	case syscall.SIGINT,syscall.SIGTERM:
 		return errors.New("signal was reserved")
@@ -52,7 +55,7 @@ func Notify(sig os.Signal, processor SignalReceive)error  {
 			signalNotifier = make(map[os.Signal]SignalReceive)
 		}
 
-		signalNotifier[sig] = processor
+		signalNotifier[sig] = receive
 	}
 
 	return nil

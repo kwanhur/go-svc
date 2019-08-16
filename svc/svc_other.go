@@ -34,10 +34,10 @@ func Run(service Service, sig ...os.Signal) error {
 	svr := &otherService{}
 	svr.signals = sig
 
-	return svr.Run()
+	return svr.run()
 }
 
-func (svr *otherService) Run()error  {
+func (svr *otherService) run()error  {
 	for sig := range signalNotifier {
 		svr.signals = append(svr.signals, sig)
 	}
