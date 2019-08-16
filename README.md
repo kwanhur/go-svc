@@ -1,9 +1,9 @@
 # go-svc
 
-[![GoDoc](https://godoc.org/github.com/judwhite/go-svc/svc?status.svg)](https://godoc.org/github.com/judwhite/go-svc/svc) [![MIT License](http://img.shields.io/:license-mit-blue.svg)](https://github.com/judwhite/go-svc/blob/master/LICENSE) [![Go Report Card](https://goreportcard.com/badge/github.com/judwhite/go-svc)](https://goreportcard.com/report/github.com/judwhite/go-svc)
-[![Build Status](https://travis-ci.org/judwhite/go-svc.svg?branch=master)](https://travis-ci.org/judwhite/go-svc)
+[![GoDoc](https://godoc.org/github.com/kwanhur/go-svc/svc?status.svg)](https://godoc.org/github.com/kwanhur/go-svc/svc) [![MIT License](http://img.shields.io/:license-mit-blue.svg)](https://github.com/kwanhur/go-svc/blob/master/LICENSE) [![Go Report Card](https://goreportcard.com/badge/github.com/kwanhur/go-svc)](https://goreportcard.com/report/github.com/kwanhur/go-svc)
+[![Build Status](https://travis-ci.org/kwanhur/go-svc.svg?branch=master)](https://travis-ci.org/kwanhur/go-svc)
 
-Go Windows Service wrapper that plays nice with Linux. Windows tests [here](https://github.com/judwhite/go-svc/blob/master/svc/svc_windows_test.go).
+Go Windows Service wrapper that plays nice with Linux. Windows tests [here](https://github.com/kwanhur/go-svc/blob/master/svc/svc_windows_test.go).
 
 ## Project Status
 
@@ -12,7 +12,7 @@ Go Windows Service wrapper that plays nice with Linux. Windows tests [here](http
 
 ## Install
 
-`go get -u github.com/judwhite/go-svc/svc`
+`go get -u github.com/kwanhur/go-svc/svc`
 
 ## Example
 
@@ -23,7 +23,7 @@ import (
 	"log"
 	"sync"
 
-	"github.com/judwhite/go-svc/svc"
+	"github.com/kwanhur/go-svc/svc"
 )
 
 // program implements svc.Service
@@ -75,19 +75,11 @@ func (p *program) Stop() error {
 	return nil
 }
 
-func (p *program) Notify(sig os.Signal) error {
-	log.Println("Notifying....")
-	if err := p.svr.notify(sig); err != nil {
-		return err
-	}
-	log.Println("Notified.")
-	return nil
-}
 ```
 
 ## More Examples
 
-See the [example](https://github.com/judwhite/go-svc/tree/master/example) directory for more examples, including installing and uninstalling binaries built in Go as Windows services.
+See the [example](https://github.com/kwanhur/go-svc/tree/master/example) directory for more examples, including installing and uninstalling binaries built in Go as Windows services.
 
 ## Similar Projects
 
@@ -95,4 +87,4 @@ See the [example](https://github.com/judwhite/go-svc/tree/master/example) direct
 
 ## License
 
-go-svc is under the MIT license. See the [LICENSE](https://github.com/judwhite/go-svc/blob/master/LICENSE) file for details.
+go-svc is under the MIT license. See the [LICENSE](https://github.com/kwanhur/go-svc/blob/master/LICENSE) file for details.
