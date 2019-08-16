@@ -113,10 +113,8 @@ func (ws *windowsService) run() error {
 		return err
 	}
 
-	if signalNotifier != nil {
-		for sig := range signalNotifier {
-			ws.signals = append(ws.signals, sig)
-		}
+	for sig := range signalNotifier {
+		ws.signals = append(ws.signals, sig)
 	}
 	for _, sig := range ws.signals{
 		ws.signalMap[sig] = struct{}{}

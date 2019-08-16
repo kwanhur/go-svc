@@ -38,10 +38,8 @@ func Run(service Service, sig ...os.Signal) error {
 }
 
 func (svr *otherService) Run()error  {
-	if signalNotifier != nil {
-		for sig := range signalNotifier {
-			svr.signals = append(svr.signals, sig)
-		}
+	for sig := range signalNotifier {
+		svr.signals = append(svr.signals, sig)
 	}
 	for _, sig := range svr.signals {
 		svr.signalMap[sig] = struct{}{}
