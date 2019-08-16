@@ -3,10 +3,13 @@ package svc
 import (
 	"os"
 	"os/signal"
+	"syscall"
+	"errors"
 )
 
 // Create variable signal.Notify function so we can mock it in tests
 var signalNotify = signal.Notify
+var signalNotifier map[os.Signal]SignalReceive
 
 // Service interface contains Start and Stop methods which are called
 // when the service is started and stopped. The Init method is called
@@ -28,9 +31,6 @@ type Service interface {
 	// Stop is called in response to syscall.SIGINT, syscall.SIGTERM, or when a
 	// Windows Service is stopped.
 	Stop() error
-
-	// Notify is called when signal from os which register at Run point.
-	Notify(sig os.Signal) error
 }
 
 // Environment contains information about the environment
@@ -38,4 +38,22 @@ type Service interface {
 type Environment interface {
 	// IsWindowsService reports whether the program is running as a Windows Service.
 	IsWindowsService() bool
+}
+
+
+type SignalReceive func(signal os.Signal)
+
+func Notify(sig os.Signal, processor SignalReceive)error  {
+	switch sig {
+	case syscall.SIGINT,syscall.SIGTERM:
+		return errors.New("signal was reserved")
+	default:
+		if signalNotifier == nil{
+			signalNotifier = make(map[os.Signal]SignalReceive)
+		}
+
+		signalNotifier[sig] = processor
+	}
+
+	return nil
 }

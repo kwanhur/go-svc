@@ -21,6 +21,7 @@ type windowsService struct {
 	stopStartErr  error
 	isInteractive bool
 	signals       []os.Signal
+	signalMap     map[os.Signal]struct{}
 	Name          string
 }
 
@@ -112,13 +113,26 @@ func (ws *windowsService) run() error {
 		return err
 	}
 
+	if signalNotifier != nil {
+		for sig := range signalNotifier {
+			ws.signals = append(ws.signals, sig)
+		}
+	}
+	for _, sig := range ws.signals{
+		ws.signalMap[sig] = struct{}{}
+	}
+
 	signalChan := make(chan os.Signal, 1)
 	signalNotify(signalChan, ws.signals...)
-	<-signalChan
 
-	err = ws.i.Stop()
-
-	return err
+	for {
+		sig := <-signalChan
+		if notify, ok := signalNotifier[sig]; ok {
+			notify(sig)
+		}else if _, ok := ws.signalMap[sig]; ok {
+			return ws.i.Stop()
+		}
+	}
 }
 
 // Execute is invoked by Windows

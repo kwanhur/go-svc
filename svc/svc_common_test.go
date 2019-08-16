@@ -1,12 +1,10 @@
 package svc
 
-import "os"
 
 type mockProgram struct {
 	start  func() error
 	stop   func() error
 	init   func(Environment) error
-	notify func(os.Signal) error
 }
 
 func (p *mockProgram) Start() error {
@@ -21,11 +19,7 @@ func (p *mockProgram) Init(wse Environment) error {
 	return p.init(wse)
 }
 
-func (p *mockProgram) Notify(sig os.Signal) error {
-	return p.notify(sig)
-}
-
-func makeProgram(startCalled, stopCalled, initCalled, notifyCalled *int) *mockProgram {
+func makeProgram(startCalled, stopCalled, initCalled *int) *mockProgram {
 	return &mockProgram{
 		start: func() error {
 			*startCalled++
@@ -37,10 +31,6 @@ func makeProgram(startCalled, stopCalled, initCalled, notifyCalled *int) *mockPr
 		},
 		init: func(wse Environment) error {
 			*initCalled++
-			return nil
-		},
-		notify: func(signal os.Signal) error {
-			*notifyCalled++
 			return nil
 		},
 	}

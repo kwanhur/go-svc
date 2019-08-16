@@ -5,7 +5,14 @@ package svc
 import (
 	"os"
 	"syscall"
+	"errors"
 )
+
+type otherService struct {
+	service Service
+	signals []os.Signal
+	signalMap map[os.Signal]struct{}
+}
 
 // Run runs your Service.
 //
@@ -25,15 +32,33 @@ func Run(service Service, sig ...os.Signal) error {
 		sig = []os.Signal{syscall.SIGINT, syscall.SIGTERM}
 	}
 
-	signalChan := make(chan os.Signal, 1)
-	signalNotify(signalChan, sig...)
-	recvSignal := <-signalChan
+	svr := &otherService{}
+	svr.signals = sig
 
-	if err := service.Notify(recvSignal); err != nil {
-		return err
+	return svr.Run()
+}
+
+func (svr *otherService) Run()error  {
+	if signalNotifier != nil {
+		for sig := range signalNotifier {
+			svr.signals = append(svr.signals, sig)
+		}
+	}
+	for _, sig := range svr.signals {
+		svr.signalMap[sig] = struct{}{}
 	}
 
-	return service.Stop()
+	signalChan := make(chan os.Signal, 1)
+	signalNotify(signalChan, svr.signals...)
+
+	for {
+		sig := <-signalChan
+		if notify, ok := signalNotifier[sig]; ok {
+			notify(sig)
+		}else if _, ok := svr.signalMap[sig]; ok {
+			return svr.service.Stop()
+		}
+	}
 }
 
 type environment struct{}

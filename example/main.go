@@ -5,7 +5,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/judwhite/go-svc/svc"
+	"github.com/kwanhur/go-svc/svc"
+	"syscall"
 )
 
 // implements svc.Service
@@ -25,6 +26,10 @@ func main() {
 			}
 		}
 	}()
+
+	if err := svc.Notify(syscall.SIGUSR2, prg.svr.notify); err != nil {
+		log.Fatal(err)
+	}
 
 	// call svc.Run to start your program/service
 	// svc.Run will call Init, Start, and Stop
@@ -70,14 +75,5 @@ func (p *program) Stop() error {
 		return err
 	}
 	log.Printf("Stopped.\n")
-	return nil
-}
-
-func (p *program) Notify(sig os.Signal) error {
-	log.Printf("Notifying....\n")
-	if err := p.svr.notify(sig); err != nil {
-		return err
-	}
-	log.Printf("Notified.\n")
 	return nil
 }

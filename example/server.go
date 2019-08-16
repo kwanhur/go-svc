@@ -29,9 +29,8 @@ func (s *server) stop() error {
 	return nil
 }
 
-func (s *server) notify(sig os.Signal) error {
-	log.Printf("got signal:%v", sig.String())
-	return nil
+func (s *server) notify(sig os.Signal) {
+	log.Printf("got sig:%s\n", sig.String())
 }
 
 func (s *server) startSender() {

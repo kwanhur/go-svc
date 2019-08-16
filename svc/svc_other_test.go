@@ -31,8 +31,8 @@ func testSignalNotify(t *testing.T, signal os.Signal, sig ...os.Signal) {
 	// shortly: we send here and the Run function gets it if it matches the filter.
 	sigChan := make(chan os.Signal)
 
-	var startCalled, stopCalled, initCalled, notifyCalled int
-	prg := makeProgram(&startCalled, &stopCalled, &initCalled, &notifyCalled)
+	var startCalled, stopCalled, initCalled int
+	prg := makeProgram(&startCalled, &stopCalled, &initCalled)
 
 	signalNotify = func(c chan<- os.Signal, sig ...os.Signal) {
 		if c == nil {
@@ -68,8 +68,5 @@ func testSignalNotify(t *testing.T, signal os.Signal, sig ...os.Signal) {
 	}
 	if initCalled != 1 {
 		t.Errorf("initCalled, want: 1 got: %d", initCalled)
-	}
-	if notifyCalled != 1 {
-		t.Errorf("notifyCalled, want: 1 got: %d", notifyCalled)
 	}
 }
